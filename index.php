@@ -11,10 +11,23 @@
 </head>
 
 <body>
+    <script>
+        function eliminar(){
+            var respuesta=confirm("Estás seguro que quieres eliminar?");
+            return respuesta;
+        }
+    </script>
     <h1 class="text-center p-3">Hola mundo</h1>
+    <?php
+    include("modelo/conexion.php");
+    include("controlador/eliminar.php");
+    ?>
     <div class="container-fluid row">
-        <form class="col-4 p-3">
+        <form class="col-4 p-3" method="POST">
             <h3 class="text-center text-secondary">Registro de Personas</h3>
+            <?php
+            include("controlador/registro_persona.php");
+            ?>
             <div class="mb-3">
                 <label for="exampleInputEmail1" class="form-label">Nombre/s</label>
                 <input type="text" class="form-control" name="nombre">
@@ -51,18 +64,24 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>Mark</td>
-                        <td>Otto</td>
-                        <td>@mdo</td>
-                        <td>Mark</td>
-                        <td>Otto</td>
-                        <td>@mdo</td>
-                        <td>
-                            <a href="" class="btn btn-small btn-warning"><i class="fa-solid fa-user-pen"></i></a>
-                            <a href="" class="btn btn-small btn-danger"><i class="fa-solid fa-trash-can"></i></a>
-                        </td>
-                    </tr>
+                    <?php
+                    include("modelo/conexion.php");
+                    $sql = $conexion->query("SELECT * FROM personas");
+                    while ($datos = $sql->fetch_object()) { ?>
+                        <tr>
+                            <td><?= $datos->id_persona ?></td>
+                            <td><?= $datos->nombre ?></td>
+                            <td><?= $datos->apellido ?></td>
+                            <td><?= $datos->dni ?></td>
+                            <td><?= $datos->fecha ?></td>
+                            <td><?= $datos->correo ?></td>
+                            <td>
+                                <a href="modificar.php?id=<?= $datos->id_persona ?>" class="btn btn-small btn-warning"><i class="fa-solid fa-user-pen"></i></a>
+                                <a onclick="return eliminar()" href="index.php?id=<?= $datos->id_persona ?>" class="btn btn-small btn-danger"><i class="fa-solid fa-trash-can"></i></a>
+                            </td>
+                        </tr>
+                    <?php }
+                    ?>
                 </tbody>
             </table>
         </div>
